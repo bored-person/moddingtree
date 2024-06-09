@@ -1,20 +1,20 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	author: "nobody",
+	name: "tree of testing",
+	id: "treeyay",
+	author: "bored_person",
 	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.0.1",
+	name: "Start",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -41,8 +41,18 @@ function canGenPoints(){
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
-
+	
 	let gain = new Decimal(1)
+	if (hasUpgrade('p', 11)) gain = gain.times(5)
+	if (hasUpgrade('e', 11)) gain = gain.times(5)
+	if (hasUpgrade('p', 12)) gain = gain.times(upgradeEffect('p', 12))
+	if (hasUpgrade('p', 14)) gain = gain.times(upgradeEffect('p', 14))
+		if (hasUpgrade('p', 22)) gain = gain.times(upgradeEffect('p', 22))
+	if (hasUpgrade('p', 23)) gain = gain.times(20)
+	if (hasUpgrade('e', 12)) gain = gain.times(upgradeEffect('e',12))
+	if (hasUpgrade('e', 14)) gain = gain.times(50)
+	if (hasUpgrade('f', 11)) gain = gain.times(5)
+	if (hasUpgrade('f', 11)) gain = gain.times(15)
 	return gain
 }
 
