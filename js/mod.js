@@ -13,14 +13,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.1",
-	name: "Start",
+	num: "0.0.2",
+	name: "rebalancing",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+	<h3>v0.0.2</h3><br>
+		- Rebalanced everything.<br>
+		- Added 1 new upgrade in prestige<br>
+		- Added more fiber upgrades<br>
+		- Made electric currents static<br><br>
+	<h3>v0.0.1</h3><br>
+		- Made the game.<br>
+		- Added stuff<br><br>`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -50,9 +55,10 @@ function getPointGen() {
 		if (hasUpgrade('p', 22)) gain = gain.times(upgradeEffect('p', 22))
 	if (hasUpgrade('p', 23)) gain = gain.times(20)
 	if (hasUpgrade('e', 12)) gain = gain.times(upgradeEffect('e',12))
-	if (hasUpgrade('e', 14)) gain = gain.times(50)
+	if (hasUpgrade('e', 14)) gain = gain.times(10)
 	if (hasUpgrade('f', 11)) gain = gain.times(5)
 	if (hasUpgrade('f', 11)) gain = gain.times(15)
+	if (hasUpgrade('f', 12)) gain = gain.times(5)
 	return gain
 }
 

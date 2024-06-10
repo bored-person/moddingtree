@@ -19,15 +19,27 @@ addLayer("p", {
             if (hasUpgrade('p', 21)) mult = mult.times(upgradeEffect('p', 21))
         if (hasUpgrade('e', 11)) mult = mult.times(2)
         if (hasUpgrade('e', 12)) mult = mult.times(upgradeEffect('e', 12))
-        if (hasUpgrade('e', 14)) mult = mult.times(10)
-        if (hasUpgrade('f', 11)) mult = mult.pow(1.3)
+        if (hasUpgrade('e', 14)) mult = mult.times(5)
+        if (hasUpgrade('f', 11)) mult = mult.times(10)
+        if (hasUpgrade('p', 24)) mult = mult.times(5)
+        if (hasUpgrade('f', 11)) mult = mult.times(3)
+
         return mult
     },
     passiveGeneration(){
         let gen = 0;
         if (hasUpgrade('f', 11)) gen += 1
         return gen;
+
     },
+
+   autoUpgrade(){
+    if (hasUpgrade('f', 12))
+        return true
+    else
+        return false
+   },
+
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
@@ -47,7 +59,7 @@ addLayer("p", {
             description: "boost points based on prestige",
             cost: new Decimal(3),
             effect() {
-                return player[this.layer].points.add(1).pow(0.3)
+                return player[this.layer].points.add(15).pow(0.27)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
@@ -65,7 +77,7 @@ addLayer("p", {
             description: "boost points based on points",
             cost: new Decimal(20),
             effect() {
-                return player.points.add(1).pow(0.22)
+                return player.points.add(1).pow(0.2)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
@@ -83,7 +95,7 @@ addLayer("p", {
             description: "boost points points based on points",
             cost: new Decimal(100),
             effect() {
-                return player.points.add(1).pow(0.20)
+                return player.points.add(1).pow(0.13)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect  
         },
@@ -91,6 +103,11 @@ addLayer("p", {
             title: "way more points",
             description: "x20 points",
             cost: new Decimal(500),
+        },
+        24: {
+            title: "more prestige",
+            description: "x5 prestige",
+            cost: new Decimal(10000),  
         },
     },
 })
@@ -109,14 +126,19 @@ addLayer("e", {
     resource: "electric currents", // Name of prestige currency
     baseResource: "prestige points", // Name of resource prestige is based on
     baseAmount() {return player.p.points}, // Get the current amount of baseResource
-    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.35, // Prestige currency exponent
+    type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 1.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
-        if (hasUpgrade('e', 13)) mult = mult.times(upgradeEffect('e', 13))
-        if (hasUpgrade('e', 14)) mult = mult.times(2)
-        if (hasUpgrade('f', 11)) mult = mult.pow(1.1)
+        if (hasUpgrade('e', 13)) mult = mult.div(upgradeEffect('e', 13))
+        if (hasUpgrade('e', 14)) mult = mult.div(3)
+        if (hasUpgrade('f', 11)) mult = mult.div(2)
+        if (hasUpgrade('f', 12)) mult = mult.div(2)
+        if (hasUpgrade('f',13)) mult = mult.div(5)
         return mult
+    },
+    canBuyMax(){
+        return true
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
@@ -135,7 +157,7 @@ addLayer("e", {
         12: {
             title: "electrical currencies",
             description: "boost prestige and points based on best electronic currents",
-            cost: new Decimal(5),
+            cost: new Decimal(3),
             effect() {
                 return player.e.best.add(1).pow(0.40)
             },
@@ -144,16 +166,16 @@ addLayer("e", {
         13: {
             title: "electric prestige",
             description: "boost electric current gain based on prestige",
-            cost: new Decimal(10),
+            cost: new Decimal(5),
             effect() {
-                return player.p.points.add(1).pow(0.03)
+                return player.p.points.add(1).pow(0.1)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect  
         },
             14: {
             title: "supercharge",
-            description: "50x points, 10x prestige and 2x electric currents",
-            cost: new Decimal(50),  
+            description: "10x points, 5x prestige and 3x electric currents",
+            cost: new Decimal(6),  
         },
     },
 })
@@ -167,14 +189,18 @@ addLayer("f", {
 		points: new Decimal(0),
     }},
     color: "#4BDC13",
-    requires: new Decimal(200000000), // Can be a function that takes requirement increases into account
-    resource: "fibres", // Name of prestige currency
+    requires: new Decimal(9), // Can be a function that takes requirement increases into account
+    resource: "fibers", // Name of prestige currency
     baseResource: "electric currents", // Name of resource prestige is based on
     baseAmount() {return player.e.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.25, // Prestige currency exponent
+    exponent: 1, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
+        if (hasUpgrade('f', 11)) mult = mult.times(2)
+        if (hasUpgrade('f', 12)) mult = mult.times(2)
+        if (hasUpgrade('f', 13)) mult = mult.times(2)
+        if (hasUpgrade('f',13)) mult = mult.times(upgradeEffect('f',13))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -187,10 +213,24 @@ addLayer("f", {
     layerShown(){return true},
     upgrades: {
         11: {
-            title: "fiberous exponents",
-            description: "x15 points, prestige^1.3, electric currents^1.1, passive prestige point gen",
+            title: "fiberous currencies",
+            description: "x15 points, x10 prestige, x2 electric currents, x2 fibers, passive prestige point gen",
             cost: new Decimal(1),
         },
+        12: {
+            title: "fiber everywhere",
+            description: "x5 points, x3 prestige, x2 electric currents, x2 fibers, autobuy prestige upgrades",
+            cost: new Decimal(3),
+        },
+        13: {
+            title: "super fiber",
+            description: "multiply fiber based on electric currents, x5 electric currents, x2 fibers, autobuy electric upgrades",
+            cost: new Decimal(6),
+            effect() {
+                return player.e.points.add(1).pow(0.15)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect  
+        }
     
     },
 })
