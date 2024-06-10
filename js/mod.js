@@ -13,11 +13,15 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.2",
-	name: "rebalancing",
+	num: "0.0.3",
+	name: "more stuff",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.0.3</h3><br>
+		- Added 2 fiber upgrades.<br>
+		- Added milestones <br>
+		- Made upgrades unlock and layers unlock<br><br>
 	<h3>v0.0.2</h3><br>
 		- Rebalanced everything.<br>
 		- Added 1 new upgrade in prestige<br>
@@ -47,7 +51,7 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 	
-	let gain = new Decimal(1)
+	let gain = new Decimal(500)
 	if (hasUpgrade('p', 11)) gain = gain.times(5)
 	if (hasUpgrade('e', 11)) gain = gain.times(5)
 	if (hasUpgrade('p', 12)) gain = gain.times(upgradeEffect('p', 12))
@@ -59,6 +63,7 @@ function getPointGen() {
 	if (hasUpgrade('f', 11)) gain = gain.times(5)
 	if (hasUpgrade('f', 11)) gain = gain.times(15)
 	if (hasUpgrade('f', 12)) gain = gain.times(5)
+	if (hasUpgrade('f', 14)) gain = gain.times(upgradeEffect('f',14))
 	return gain
 }
 

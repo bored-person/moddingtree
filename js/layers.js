@@ -23,6 +23,7 @@ addLayer("p", {
         if (hasUpgrade('f', 11)) mult = mult.times(10)
         if (hasUpgrade('p', 24)) mult = mult.times(5)
         if (hasUpgrade('f', 11)) mult = mult.times(3)
+        if (hasUpgrade('f', 14)) mult = mult.times(upgradeEffect('f',14))
 
         return mult
     },
@@ -58,6 +59,7 @@ addLayer("p", {
             title: "prestige points",
             description: "boost points based on prestige",
             cost: new Decimal(3),
+            unlocked() { return hasUpgrade('p', 11) },
             effect() {
                 return player[this.layer].points.add(15).pow(0.27)
             },
@@ -67,6 +69,7 @@ addLayer("p", {
             title: "points prestige",
             description: "boost prestige based on points",
             cost: new Decimal(10),
+            unlocked() { return hasUpgrade('p', 12) },
             effect() {
                 return player.points.add(1).pow(0.20)
             },
@@ -75,6 +78,7 @@ addLayer("p", {
         14: {
             title: "points points",
             description: "boost points based on points",
+            unlocked() { return hasUpgrade('p', 13) },
             cost: new Decimal(20),
             effect() {
                 return player.points.add(1).pow(0.2)
@@ -84,6 +88,7 @@ addLayer("p", {
         21: {
             title: "prestigy prestige",
             description: "boost points prestige based on prestige",
+            unlocked() { return hasUpgrade('p', 14) },
             cost: new Decimal(50),
             effect() {
                 return player.p.points.add(1).pow(0.20)
@@ -93,6 +98,7 @@ addLayer("p", {
         22: {
             title: "super points points",
             description: "boost points points based on points",
+            unlocked() { return hasUpgrade('p', 21) },
             cost: new Decimal(100),
             effect() {
                 return player.points.add(1).pow(0.13)
@@ -102,11 +108,13 @@ addLayer("p", {
         23: {
             title: "way more points",
             description: "x20 points",
+            unlocked() { return hasUpgrade('p', 22) },
             cost: new Decimal(500),
         },
         24: {
             title: "more prestige",
             description: "x5 prestige",
+            unlocked() { return hasUpgrade('p', 23) },
             cost: new Decimal(10000),  
         },
     },
@@ -117,7 +125,7 @@ addLayer("e", {
     symbol: "E", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
-        unlocked: true,
+        unlocked: false,
 		points: new Decimal(0),
         best: new Decimal(0)
     }},
@@ -135,19 +143,35 @@ addLayer("e", {
         if (hasUpgrade('f', 11)) mult = mult.div(2)
         if (hasUpgrade('f', 12)) mult = mult.div(2)
         if (hasUpgrade('f',13)) mult = mult.div(5)
+        if (hasUpgrade('f', 14)) mult = mult.div(upgradeEffect('f',14))
+        if (hasUpgrade('f', 21)) mult = mult.div(upgradeEffect('f',21))
         return mult
     },
     canBuyMax(){
         return true
     },
+    autoUpgrade(){
+        return (hasUpgrade('f', 13))
+    },
+    unlocked(){
+        return (hasMilestone('e',0))
+    },
+    autoPrestige(){
+        return (hasMilestone('f',1))
+    },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(1)
+        let gainEx = new Decimal(1)
+        if (hasUpgrade('f', 14)) gainEx = gainEx.times(2)
+        if (hasUpgrade('f', 21)) gainEx = gainEx.times(5)
+        return gainEx
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
         {key: "e", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true},
+    resetsNothing(){
+        return hasMilestone('f',1)
+    },
     upgrades: {
         11: {
             title: "better rebirth",
@@ -157,6 +181,7 @@ addLayer("e", {
         12: {
             title: "electrical currencies",
             description: "boost prestige and points based on best electronic currents",
+            unlocked() { return hasUpgrade('e', 11) },
             cost: new Decimal(3),
             effect() {
                 return player.e.best.add(1).pow(0.40)
@@ -167,6 +192,7 @@ addLayer("e", {
             title: "electric prestige",
             description: "boost electric current gain based on prestige",
             cost: new Decimal(5),
+            unlocked() { return hasUpgrade('e', 12) },
             effect() {
                 return player.p.points.add(1).pow(0.1)
             },
@@ -175,7 +201,15 @@ addLayer("e", {
             14: {
             title: "supercharge",
             description: "10x points, 5x prestige and 3x electric currents",
-            cost: new Decimal(6),  
+            unlocked() { return hasUpgrade('e', 13) },
+            cost: new Decimal(6),
+            },
+        },
+    milestones:{
+        0: {
+			requirementDescription: '1 electric current',
+			effectDescription: 'keep electric currents unlocked on reset',
+			done() { return player.e.points.gte(1) },
         },
     },
 })
@@ -185,7 +219,7 @@ addLayer("f", {
     symbol: "F", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
-        unlocked: true,
+        unlocked: false,
 		points: new Decimal(0),
     }},
     color: "#4BDC13",
@@ -201,10 +235,14 @@ addLayer("f", {
         if (hasUpgrade('f', 12)) mult = mult.times(2)
         if (hasUpgrade('f', 13)) mult = mult.times(2)
         if (hasUpgrade('f',13)) mult = mult.times(upgradeEffect('f',13))
+        if (hasMilestone('f',1)) mult = mult.times(2)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
+    },
+    unlocked() {
+        return (hasMilestone('f',0))
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
@@ -221,16 +259,50 @@ addLayer("f", {
             title: "fiber everywhere",
             description: "x5 points, x3 prestige, x2 electric currents, x2 fibers, autobuy prestige upgrades",
             cost: new Decimal(3),
+            unlocked() { return hasUpgrade('f', 11) },
         },
         13: {
             title: "super fiber",
             description: "multiply fiber based on electric currents, x5 electric currents, x2 fibers, autobuy electric upgrades",
             cost: new Decimal(6),
+            unlocked() { return hasUpgrade('f', 12) },
             effect() {
                 return player.e.points.add(1).pow(0.15)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect  
-        }
-    
+        
+        },
+        14: {
+            title: "reoccuring currencies",
+            description: "boost points, prestige and electric currents based on points times prestige and 2x electric currents",
+            cost: new Decimal(100),
+            unlocked() { return hasUpgrade('f', 13) },
+            effect() {
+                return (player.points.add(1).pow(0.05)).times(player.p.points.add(1).pow(0.05))
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect 
+        },
+        21: {
+            title: "electric wiring",
+            description: "x5 electric current gain and reduce electric current requirement based on points",
+            cost: new Decimal(250),
+            unlocked() { return hasUpgrade('f', 14) },
+            effect() {
+                return player.points.add(1).pow(0.125)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect 
+        },
     },
+    milestones:{
+        0:{
+            requirementDescription: '1 fiber',
+            effectDescription: 'keep fibers unblocked on reset',
+            done() { return player.f.points.gte(1) },
+        },
+        1: {
+			requirementDescription: '500 fibers',
+			effectDescription: 'electric current resets nothing and auto resets, x2 fiber gain',
+			done() { return player.f.points.gte(500) },
+		},
+    }
 })
