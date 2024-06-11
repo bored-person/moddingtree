@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3",
-	name: "more stuff",
+	num: "0.1.0",
+	name: "the light update",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.1.0</h3><br>
+		- Added light, and 3 light upgrades<br>
+		- Added several fiber upgrades<br><br>
 	<h3>v0.0.3</h3><br>
 		- Added 2 fiber upgrades.<br>
 		- Added milestones <br>
@@ -64,6 +67,9 @@ function getPointGen() {
 	if (hasUpgrade('f', 11)) gain = gain.times(15)
 	if (hasUpgrade('f', 12)) gain = gain.times(5)
 	if (hasUpgrade('f', 14)) gain = gain.times(upgradeEffect('f',14))
+	if (hasUpgrade('f', 32)) gain = gain.pow(upgradeEffect('f',32))
+	if (hasUpgrade('l',11)) gain = gain.times(2)
+	if (hasUpgrade('l',13)) gain = gain.times(upgradeEffect('l',13))
 	return gain
 }
 
