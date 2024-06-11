@@ -408,7 +408,7 @@ addLayer("l", {
     gainExp() { // Calculate the exponent on main currency from bonuses
         let gainEx = new Decimal(1)
         if (hasUpgrade('l',12)) gainEx = gainEx.times(3).times(upgradeEffect('l',12))
-        if (hasMilestone('l',0)) gainEx = gainEx.times(2)
+        if (hasMilestone('l',0)) gainEx = gainEx.times(4)
         return gainEx
     },
     row: 3, // Row the layer is in on the tree (0 is the first row)
@@ -424,7 +424,7 @@ addLayer("l", {
         12: {
             title: "brighter",
             description: "x3 light, boost light gain based on best light",
-            cost: new Decimal(3),
+            cost: new Decimal(4),
             unlocked(){
                 return hasUpgrade('l',11)
             },
@@ -448,9 +448,9 @@ addLayer("l", {
     },
     milestones:{
         0:{
-            requirementDescription: '5 light',
-            effectDescription: 'autobuy fiber upgrades, x2 light',
-            done() { return player.l.points.gte(5) },
+            requirementDescription: '3 light',
+            effectDescription: 'autobuy fiber upgrades, x4 light',
+            done() { return player.l.points.gte(3) },
         },
         1:{
             requirementDescription: '7 light',

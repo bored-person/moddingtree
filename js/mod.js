@@ -13,11 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.0",
-	name: "the light update",
+	num: "0.1.0a",
+	name: "the 'im dumb and forgot to balance the game' update",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.1.0a</h3><br>
+		- Rebalanced the game to make it possible to get past 3 light <br><br>
 	<h3>v0.1.0</h3><br>
 		- Added light, and 3 light upgrades<br>
 		- Added several fiber upgrades<br><br>
