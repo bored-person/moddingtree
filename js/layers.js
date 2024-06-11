@@ -424,7 +424,7 @@ addLayer("l", {
         12: {
             title: "brighter",
             description: "x3 light, boost light gain based on best light",
-            cost: new Decimal(4),
+            cost: new Decimal(3),
             unlocked(){
                 return hasUpgrade('l',11)
             },
