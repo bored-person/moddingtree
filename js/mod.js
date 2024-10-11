@@ -13,14 +13,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.0a",
-	name: "the 'im dumb and forgot to balance the game' update",
+	num: "0.2.0",
+	name: "the big one",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.1.0a</h3><br>
+let changelog = `<h1>Changelog:</h1><br><br>
+	<h3>v0.2.0 - the big one</h3><br>
+		- rebalanced entire game <br>
+		- added new light upgrade that adds new upgrades <br><br>
+	<h3>v0.1.0a - the 'im dumb and forgot to balance the game' update</h3><br>
 		- Rebalanced the game to make it possible to get past 3 light <br><br>
-	<h3>v0.1.0</h3><br>
+	<h3>v0.1.0 - the light update</h3><br>
 		- Added light, and 3 light upgrades<br>
 		- Added several fiber upgrades<br><br>
 	<h3>v0.0.3</h3><br>
@@ -54,15 +57,17 @@ function canGenPoints(){
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
-		return new Decimal(0)
+		return new Decimal(1)
 	
 	let gain = new Decimal(1)
 	if (hasUpgrade('p', 11)) gain = gain.times(5)
+	if (hasUpgrade('p', 12)) gain = gain.times(2)
 	if (hasUpgrade('e', 11)) gain = gain.times(5)
 	if (hasUpgrade('p', 12)) gain = gain.times(upgradeEffect('p', 12))
 	if (hasUpgrade('p', 14)) gain = gain.times(upgradeEffect('p', 14))
-		if (hasUpgrade('p', 22)) gain = gain.times(upgradeEffect('p', 22))
+	if (hasUpgrade('p', 22)) gain = gain.times(upgradeEffect('p', 22))
 	if (hasUpgrade('p', 23)) gain = gain.times(20)
+	if (hasUpgrade('p', 32)) gain = gain.times(10)
 	if (hasUpgrade('e', 12)) gain = gain.times(upgradeEffect('e',12))
 	if (hasUpgrade('e', 14)) gain = gain.times(10)
 	if (hasUpgrade('f', 11)) gain = gain.times(5)
@@ -72,6 +77,9 @@ function getPointGen() {
 	if (hasUpgrade('f', 32)) gain = gain.pow(upgradeEffect('f',32))
 	if (hasUpgrade('l',11)) gain = gain.times(2)
 	if (hasUpgrade('l',13)) gain = gain.times(upgradeEffect('l',13))
+	if (hasMilestone('l',0)) gain = gain.times(2)
+	if (hasUpgrade('l',12)) gain = gain.times(2)
+	if (hasUpgrade('p',33)) gain = gain.times(upgradeEffect('p',33))
 	return gain
 }
 
